@@ -52,6 +52,7 @@ in
       ".local/share/hypr/" = {
         source = "${pkgs.hyde}/Configs/.local/share/hypr/";
         recursive = true;
+        force = true;
       };
       ".config/hypr/hyprland.conf" =
         if cfg.overrideMain != null then

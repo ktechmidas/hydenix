@@ -38,6 +38,7 @@ in
       ".config/wlogout/icons/" = {
         source = "${pkgs.hyde}/Configs/.config/wlogout/icons/";
         recursive = true;
+        force = true;
       };
 
       # Stateful files with themes

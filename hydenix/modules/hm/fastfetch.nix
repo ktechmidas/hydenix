@@ -27,6 +27,7 @@ in
       ".config/fastfetch/logos" = {
         source = "${pkgs.hyde}/Configs/.config/fastfetch/logos";
         recursive = true;
+        force = true;
       };
     };
   };

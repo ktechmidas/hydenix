@@ -111,6 +111,7 @@ in
       ".local/share/fastfetch/presets/hyde" = {
         source = "${pkgs.hyde}/Configs/.local/share/fastfetch/presets/hyde";
         recursive = true;
+        force = true;
       };
       ".local/share/hyde" = {
         source = "${pkgs.hyde}/Configs/.local/share/hyde";
@@ -128,18 +129,22 @@ in
       ".local/share/waybar/includes" = {
         source = "${pkgs.hyde}/Configs/.local/share/waybar/includes";
         recursive = true;
+        force = true;
       };
       ".local/share/waybar/layouts" = {
         source = "${pkgs.hyde}/Configs/.local/share/waybar/layouts";
         recursive = true;
+        force = true;
       };
       ".local/share/waybar/menus" = {
         source = "${pkgs.hyde}/Configs/.local/share/waybar/menus";
         recursive = true;
+        force = true;
       };
       ".local/share/waybar/modules" = {
         source = "${pkgs.hyde}/Configs/.local/share/waybar/modules";
         recursive = true;
+        force = true;
       };
       ".local/share/waybar/styles" = {
         source = "${pkgs.hyde}/Configs/.local/share/waybar/styles";
