@@ -1,7 +1,7 @@
 
 > [!CAUTION]
-> hydenix is now in **maintenance mode**. </br>
-> nixpkgs and hyde version updates are halted and issues may go unaddressed.
+> This is a forked hydenix to maintain compatibility after the previous maintainer left.
+> AI will be used to assist, as it is just for my own system. Proceed with caution if you would like to use this as well. 
 
 </br>
 
