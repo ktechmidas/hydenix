@@ -49,11 +49,37 @@ in
     '';
 
     home.file = {
-      ".local/share/hypr/" = {
-        source = "${pkgs.hyde}/Configs/.local/share/hypr/";
-        recursive = true;
+      # Deploy .local/share/hypr/ files individually so windowrules.conf
+      # can be managed separately with its own override mechanism
+      ".local/share/hypr/defaults.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/defaults.conf";
         force = true;
       };
+      ".local/share/hypr/dynamic.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/dynamic.conf";
+        force = true;
+      };
+      ".local/share/hypr/env.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/env.conf";
+        force = true;
+      };
+      ".local/share/hypr/finale.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/finale.conf";
+        force = true;
+      };
+      ".local/share/hypr/hyprland.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/hyprland.conf";
+        force = true;
+      };
+      ".local/share/hypr/startup.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/startup.conf";
+        force = true;
+      };
+      ".local/share/hypr/variables.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/variables.conf";
+        force = true;
+      };
+      # windowrules.conf is managed by windowrules.nix
       ".config/hypr/hyprland.conf" =
         if cfg.overrideMain != null then
           {
