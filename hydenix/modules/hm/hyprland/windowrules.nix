@@ -123,7 +123,8 @@ let
 
     # Fix file chooser dialogs opening off-screen or too large
     windowrule = float on, match:tag portal-dialogs
-    windowrule = size <60% <80%, match:tag portal-dialogs
+    windowrule = max_size 768 576, match:class ^(xdg-desktop-portal-gtk)$
+    windowrule = max_size 768 576, match:class ^([Xx]dg-desktop-portal-gtk)$
     windowrule = center on, match:tag portal-dialogs
 
     # Only add the Core applications here
