@@ -117,12 +117,14 @@ let
     # See https://wiki.hypr.land/Configuring/Window-Rules/
 
     # Sizes for floating popups
-    windowrule = size <85% <95%, match:float on
+    windowrule = size <85% <95%, match:float true
     windowrule = float on, match:tag common-popups
     windowrule = size <60% <90%, match:tag common-popups
 
-    # Fix file chooser dialogs opening off-screen
+    # Fix file chooser dialogs opening off-screen or too large
     windowrule = float on, match:tag portal-dialogs
+    windowrule = max_size 768 576, match:class ^(xdg-desktop-portal-gtk)$
+    windowrule = max_size 768 576, match:class ^([Xx]dg-desktop-portal-gtk)$
     windowrule = center on, match:tag portal-dialogs
 
     # Only add the Core applications here
