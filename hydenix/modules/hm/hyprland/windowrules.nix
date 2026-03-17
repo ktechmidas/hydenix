@@ -18,10 +18,10 @@ let
     # '$&' is a hyde specific shorthand for "override"
     $&=override
 
-    # idleinhibit rules
-    windowrule = idleinhibit fullscreen, match:class ^(.*celluloid.*)$|^(.*mpv.*)$|^(.*vlc.*)$
-    windowrule = idleinhibit fullscreen, match:class ^(.*[Ss]potify.*)$
-    windowrule = idleinhibit fullscreen, match:class ^(.*LibreWolf.*)$|^(.*floorp.*)$|^(.*brave-browser.*)$|^(.*firefox.*)$|^(.*chromium.*)$|^(.*zen.*)$|^(.*vivaldi.*)$
+    # idle inhibit rules (suppress idle events when fullscreen)
+    windowrule = suppress_events idle, match:fullscreen true, match:class ^(.*celluloid.*)$|^(.*mpv.*)$|^(.*vlc.*)$
+    windowrule = suppress_events idle, match:fullscreen true, match:class ^(.*[Ss]potify.*)$
+    windowrule = suppress_events idle, match:fullscreen true, match:class ^(.*LibreWolf.*)$|^(.*floorp.*)$|^(.*brave-browser.*)$|^(.*firefox.*)$|^(.*chromium.*)$|^(.*zen.*)$|^(.*vivaldi.*)$
 
     # Picture-in-Picture
     windowrule = tag +picture-in-picture, match:title ^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$
