@@ -18,18 +18,18 @@ let
     # '$&' is a hyde specific shorthand for "override"
     $&=override
 
-    # idle inhibit rules (suppress idle events when fullscreen)
-    windowrule = suppress_events idle, match:fullscreen true, match:class ^(.*celluloid.*)$|^(.*mpv.*)$|^(.*vlc.*)$
-    windowrule = suppress_events idle, match:fullscreen true, match:class ^(.*[Ss]potify.*)$
-    windowrule = suppress_events idle, match:fullscreen true, match:class ^(.*LibreWolf.*)$|^(.*floorp.*)$|^(.*brave-browser.*)$|^(.*firefox.*)$|^(.*chromium.*)$|^(.*zen.*)$|^(.*vivaldi.*)$
+    # idle inhibit rules
+    windowrule = idle_inhibit fullscreen, match:class ^(.*celluloid.*)$|^(.*mpv.*)$|^(.*vlc.*)$
+    windowrule = idle_inhibit fullscreen, match:class ^(.*[Ss]potify.*)$
+    windowrule = idle_inhibit fullscreen, match:class ^(.*LibreWolf.*)$|^(.*floorp.*)$|^(.*brave-browser.*)$|^(.*firefox.*)$|^(.*chromium.*)$|^(.*zen.*)$|^(.*vivaldi.*)$
 
     # Picture-in-Picture
     windowrule = tag +picture-in-picture, match:title ^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$
-    windowrule = float true, match:tag picture-in-picture
-    windowrule = keep_aspect_ratio true, match:tag picture-in-picture
+    windowrule = float on, match:tag picture-in-picture
+    windowrule = keep_aspect_ratio on, match:tag picture-in-picture
     windowrule = move 73% 72%, match:tag picture-in-picture
     windowrule = size 25%, match:tag picture-in-picture
-    windowrule = pin true, match:tag picture-in-picture
+    windowrule = pin on, match:tag picture-in-picture
 
     windowrule = opacity 0.90 $& 0.90 $& 1, match:class ^(firefox)$
     windowrule = opacity 0.90 $& 0.90 $& 1, match:class ^(brave-browser)$
@@ -78,33 +78,33 @@ let
     windowrule = opacity 0.80 0.80, match:class ^(io.missioncenter.MissionCenter)$
     windowrule = opacity 0.80 0.80, match:class ^(io.github.flattool.Warehouse)$
 
-    windowrule = float true, match:class ^(Signal)$
-    windowrule = float true, match:class ^(com.github.rafostar.Clapper)$
-    windowrule = float true, match:class ^(app.drey.Warp)$
-    windowrule = float true, match:class ^(net.davidotek.pupgui2)$
-    windowrule = float true, match:class ^(yad)$
-    windowrule = float true, match:class ^(eog)$
-    windowrule = float true, match:class ^(io.github.alainm23.planify)$
-    windowrule = float true, match:class ^(io.gitlab.theevilskeleton.Upscaler)$
-    windowrule = float true, match:class ^(com.github.unrud.VideoDownloader)$
-    windowrule = float true, match:class ^(io.gitlab.adhami3310.Impression)$
-    windowrule = float true, match:class ^(io.missioncenter.MissionCenter)$
+    windowrule = float on, match:class ^(Signal)$
+    windowrule = float on, match:class ^(com.github.rafostar.Clapper)$
+    windowrule = float on, match:class ^(app.drey.Warp)$
+    windowrule = float on, match:class ^(net.davidotek.pupgui2)$
+    windowrule = float on, match:class ^(yad)$
+    windowrule = float on, match:class ^(eog)$
+    windowrule = float on, match:class ^(io.github.alainm23.planify)$
+    windowrule = float on, match:class ^(io.gitlab.theevilskeleton.Upscaler)$
+    windowrule = float on, match:class ^(com.github.unrud.VideoDownloader)$
+    windowrule = float on, match:class ^(io.gitlab.adhami3310.Impression)$
+    windowrule = float on, match:class ^(io.missioncenter.MissionCenter)$
 
     # workaround for jetbrains IDEs dropdowns/popups cause flickering
-    windowrule = no_initial_focus true, match:class ^(.*jetbrains.*)$, match:title ^(win[0-9]+)$
+    windowrule = no_initial_focus on, match:class ^(.*jetbrains.*)$, match:title ^(win[0-9]+)$
 
     # █░░ ▄▀█ █▄█ █▀▀ █▀█   █▀█ █░█ █░░ █▀▀ █▀
     # █▄▄ █▀█ ░█░ ██▄ █▀▄   █▀▄ █▄█ █▄▄ ██▄ ▄█
 
-    layerrule = blur true, match:namespace rofi
+    layerrule = blur on, match:namespace rofi
     layerrule = ignore_alpha 0, match:namespace rofi
-    layerrule = blur true, match:namespace notifications
+    layerrule = blur on, match:namespace notifications
     layerrule = ignore_alpha 0, match:namespace notifications
-    layerrule = blur true, match:namespace swaync-notification-window
+    layerrule = blur on, match:namespace swaync-notification-window
     layerrule = ignore_alpha 0, match:namespace swaync-notification-window
-    layerrule = blur true, match:namespace swaync-control-center
+    layerrule = blur on, match:namespace swaync-control-center
     layerrule = ignore_alpha 0, match:namespace swaync-control-center
-    layerrule = blur true, match:namespace logout_dialog
+    layerrule = blur on, match:namespace logout_dialog
   '';
 
   # Hyprland v3 window rules for ~/.local/share/hypr/windowrules.conf
@@ -117,34 +117,34 @@ let
     # See https://wiki.hypr.land/Configuring/Window-Rules/
 
     # Sizes for floating popups
-    windowrule = size <85% <95%, match:float true
-    windowrule = float true, match:tag common-popups
+    windowrule = size <85% <95%, match:float on
+    windowrule = float on, match:tag common-popups
     windowrule = size <60% <90%, match:tag common-popups
 
     # Fix file chooser dialogs opening off-screen
-    windowrule = float true, match:tag portal-dialogs
-    windowrule = center true, match:tag portal-dialogs
+    windowrule = float on, match:tag portal-dialogs
+    windowrule = center on, match:tag portal-dialogs
 
     # Only add the Core applications here
-    windowrule = float true, match:class ^(com.gabm.satty)$
-    windowrule = float true, match:class ^(org.kde.dolphin)$, match:title ^(Progress Dialog — Dolphin)$
-    windowrule = float true, match:class ^(org.kde.dolphin)$, match:title ^(Copying — Dolphin)$
-    windowrule = float true, match:title ^(About Mozilla Firefox)$
-    windowrule = float true, match:class ^(.*)$, match:initial_title ^(top)$
-    windowrule = float true, match:class ^(.*)$, match:initial_title ^(btop)$
-    windowrule = float true, match:class ^(.*)$, match:initial_title ^(htop)$
-    windowrule = float true, match:class ^(vlc)$
-    windowrule = float true, match:class ^(kvantummanager)$
-    windowrule = float true, match:class ^(qt5ct)$
-    windowrule = float true, match:class ^(qt6ct)$
-    windowrule = float true, match:class ^(nwg-look)$
-    windowrule = float true, match:class ^(nwg-displays)$
-    windowrule = float true, match:class ^(org.kde.ark)$
-    windowrule = float true, match:class ^(org.pulseaudio.pavucontrol)$
-    windowrule = float true, match:class ^(blueman-manager)$
-    windowrule = float true, match:class ^(nm-applet)$
-    windowrule = float true, match:class ^(nm-connection-editor)$
-    windowrule = float true, match:class ^(org.kde.polkit-kde-authentication-agent-1)$
+    windowrule = float on, match:class ^(com.gabm.satty)$
+    windowrule = float on, match:class ^(org.kde.dolphin)$, match:title ^(Progress Dialog — Dolphin)$
+    windowrule = float on, match:class ^(org.kde.dolphin)$, match:title ^(Copying — Dolphin)$
+    windowrule = float on, match:title ^(About Mozilla Firefox)$
+    windowrule = float on, match:class ^(.*)$, match:initial_title ^(top)$
+    windowrule = float on, match:class ^(.*)$, match:initial_title ^(btop)$
+    windowrule = float on, match:class ^(.*)$, match:initial_title ^(htop)$
+    windowrule = float on, match:class ^(vlc)$
+    windowrule = float on, match:class ^(kvantummanager)$
+    windowrule = float on, match:class ^(qt5ct)$
+    windowrule = float on, match:class ^(qt6ct)$
+    windowrule = float on, match:class ^(nwg-look)$
+    windowrule = float on, match:class ^(nwg-displays)$
+    windowrule = float on, match:class ^(org.kde.ark)$
+    windowrule = float on, match:class ^(org.pulseaudio.pavucontrol)$
+    windowrule = float on, match:class ^(blueman-manager)$
+    windowrule = float on, match:class ^(nm-applet)$
+    windowrule = float on, match:class ^(nm-connection-editor)$
+    windowrule = float on, match:class ^(org.kde.polkit-kde-authentication-agent-1)$
 
     # common popups
     windowrule = tag +common-popups, match:initial_title ^(Open File)$
@@ -170,17 +170,17 @@ let
     # // █░░ ▄▀█ █▄█ █▀▀ █▀█   █▀█ █░█ █░░ █▀▀ █▀
     # // █▄▄ █▀█ ░█░ ██▄ █▀▄   █▀▄ █▄█ █▄▄ ██▄ ▄█
 
-    layerrule = blur true, match:namespace rofi
+    layerrule = blur on, match:namespace rofi
     layerrule = ignore_alpha 0, match:namespace rofi
-    layerrule = blur true, match:namespace notifications
+    layerrule = blur on, match:namespace notifications
     layerrule = ignore_alpha 0, match:namespace notifications
-    layerrule = blur true, match:namespace swaync-notification-window
+    layerrule = blur on, match:namespace swaync-notification-window
     layerrule = ignore_alpha 0, match:namespace swaync-notification-window
-    layerrule = blur true, match:namespace swaync-control-center
+    layerrule = blur on, match:namespace swaync-control-center
     layerrule = ignore_alpha 0, match:namespace swaync-control-center
-    layerrule = blur true, match:namespace logout_dialog
+    layerrule = blur on, match:namespace logout_dialog
     layerrule = ignore_alpha 0, match:namespace logout_dialog
-    layerrule = blur true, match:namespace waybar
+    layerrule = blur on, match:namespace waybar
     layerrule = ignore_alpha 0, match:namespace waybar
   '';
 in
