@@ -36,6 +36,7 @@ in
       btop
       gpu-screen-recorder
       grimblast
+      nerd-fonts.ubuntu
     ];
 
     home.file = lib.mkMerge [
