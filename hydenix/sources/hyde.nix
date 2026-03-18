@@ -47,6 +47,11 @@ pkgs.stdenv.mkDerivation {
     # hyprlock.sh spawns hyprlock in a separate scope — the lock never appears.
     sed -i '/^unit_name=/,$ { s|app2unit.sh.*-- "\$lockscreen.sh" "\$@"|exec "\$lockscreen.sh" "\$@"| ; s|app2unit.sh.*-- "\$lockscreen" "\$@"|exec "\$lockscreen" "\$@"| }' Configs/.local/lib/hyde/lockscreen.sh
 
+    # Replace game launcher keybinding with plain rofi dmenu
+    # The default hyde-shell gamelauncher uses a steam_deck fullscreen theme
+    # that renders poorly on NixOS. Use a simple rofi dmenu list instead.
+    sed -i 's|exec, hyde-shell gamelauncher.*|exec, sh -c '"'"'selected=$(python3 $HOME/.local/lib/hyde/gamelauncher/steam.py --rofi-string \| rofi -dmenu -p Games -display-columns 1 -i); [ -n "$selected" ] \&\& cmd=$(echo "$selected" \| cut -f2) \&\& eval exec "$cmd"'"'"'|' Configs/.config/hypr/keybindings.conf
+
     # Remove broken waybar layout 02 (renders empty bar)
     rm -f Configs/.config/waybar/layouts/hyprdots/02.jsonc
     rm -f Configs/.local/share/waybar/layouts/hyprdots/02.jsonc
