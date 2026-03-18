@@ -37,7 +37,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && !config.hydenix.hm.hyprpanel.enable) {
     home.packages =
       with pkgs;
       lib.optionals cfg.waybar.enable [

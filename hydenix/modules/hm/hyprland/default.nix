@@ -7,6 +7,26 @@
 
 let
   cfg = config.hydenix.hm.hyprland;
+  hyprpanelEnabled = config.hydenix.hm.hyprpanel.enable;
+
+  # Read upstream variables.conf and patch bar/notification startup when hyprpanel is active
+  variablesConf =
+    let
+      original = builtins.readFile "${pkgs.hyde}/Configs/.local/share/hypr/variables.conf";
+    in
+    if hyprpanelEnabled then
+      builtins.replaceStrings
+        [
+          "$start.BAR=hyde-shell app -u hyde-$XDG_SESSION_DESKTOP-waybar-watcher.service -t service -- waybar.py --watch # we specify `-waybar` because this unit is specific for waybar.py ↓ . `hyde-$XDG_SESSION_DESKTOP-bar.service -t service` should be used for other bars."
+          "$start.NOTIFICATIONS=hyde-shell app -t service dunst"
+        ]
+        [
+          "$start.BAR=hyde-shell app -u hyde-$XDG_SESSION_DESKTOP-bar.service -t service -- hyprpanel"
+          "$start.NOTIFICATIONS=#disabled - HyprPanel provides notifications"
+        ]
+        original
+    else
+      original;
 in
 {
   imports = [
@@ -80,7 +100,7 @@ in
         force = true;
       };
       ".local/share/hypr/variables.conf" = {
-        source = "${pkgs.hyde}/Configs/.local/share/hypr/variables.conf";
+        text = variablesConf;
         force = true;
       };
       # windowrules.conf is managed by windowrules.nix

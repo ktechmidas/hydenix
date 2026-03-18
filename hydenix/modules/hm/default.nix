@@ -14,6 +14,7 @@
     ./git.nix
     ./hyde.nix
     ./hyprland
+    ./hyprpanel.nix
     ./lockscreen.nix
     ./notifications.nix
     ./qt.nix
