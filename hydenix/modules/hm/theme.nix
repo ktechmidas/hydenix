@@ -107,6 +107,25 @@ in
         )
       }:$HOME/.local/bin:$PATH"
 
+      # Ensure XDG_SESSION_DESKTOP is set so hyde waybar unit names resolve
+      # correctly (hyde-Hyprland-bar.service vs hyde-unknown-bar.service)
+      export XDG_SESSION_DESKTOP="''${XDG_SESSION_DESKTOP:-Hyprland}"
+      export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+
+      # Find Hyprland socket for hyprctl calls during theme switch
+      _hypr_sock=""
+      for _s in "$XDG_RUNTIME_DIR"/hypr/*/.socket.sock; do
+        [ -S "$_s" ] && _hypr_sock="$_s" && break
+      done
+      if [ -n "$_hypr_sock" ]; then
+        export HYPRLAND_INSTANCE_SIGNATURE="$(basename "$(dirname "$_hypr_sock")")"
+      fi
+
+      # HYPRLAND_CONFIG must be set for theme.switch.sh to write theme.conf
+      # (decoration:rounding, gaps, borders, etc.). Without it, theme.conf
+      # stays empty and Hyprland keeps decoration:rounding=0.
+      export HYPRLAND_CONFIG="''${HYPRLAND_CONFIG:-$HOME/.config/hypr/hyprland.conf}"
+
       # Set up logging
       LOG_FILE="$HOME/.local/state/hyde/theme-switch.log"
       mkdir -p $HOME/.local/state/hyde
