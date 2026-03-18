@@ -269,7 +269,7 @@ in
         )
       }:$HOME/.local/bin:$PATH"
 
-      if [ -S "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket.sock" ] 2>/dev/null; then
+      if [ -n "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ] && [ -S "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket.sock" ]; then
         $HOME/.local/bin/hyde-shell waybar.py --update 2>/dev/null || true
       fi
     '';
