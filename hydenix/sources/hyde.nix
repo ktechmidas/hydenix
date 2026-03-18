@@ -47,6 +47,10 @@ pkgs.stdenv.mkDerivation {
     # hyprlock.sh spawns hyprlock in a separate scope — the lock never appears.
     sed -i '/^unit_name=/,$ { s|app2unit.sh.*-- "\$lockscreen.sh" "\$@"|exec "\$lockscreen.sh" "\$@"| ; s|app2unit.sh.*-- "\$lockscreen" "\$@"|exec "\$lockscreen" "\$@"| }' Configs/.local/lib/hyde/lockscreen.sh
 
+    # Remove broken waybar layout 02 (renders empty bar)
+    rm -f Configs/.config/waybar/layouts/hyprdots/02.jsonc
+    rm -f Configs/.local/share/waybar/layouts/hyprdots/02.jsonc
+
     # BUILD FONTS
     mkdir -p $out/share/fonts/truetype
     for fontarchive in ./Source/arcs/Font_*.tar.gz; do

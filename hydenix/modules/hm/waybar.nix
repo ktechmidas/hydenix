@@ -249,11 +249,13 @@ in
       };
     };
 
-    # Regenerate waybar dynamic CSS after activation.
+    # Regenerate waybar dynamic CSS after activation settles.
     # home.file with force+mutable overwrites global.css and border-radius.css
-    # with Hyde's templates (border-radius: 0em) on every rebuild.
-    # waybar.py --update reads the live Hyprland rounding value and regenerates them.
-    home.activation.waybarUpdate = lib.hm.dag.entryAfter [ "mutableGeneration" ] ''
+    # with Hyde's templates on every rebuild.  The setTheme activation runs
+    # theme.switch.sh which partially regenerates CSS, but the result is
+    # incomplete during activation context.  Spawning waybar.py --update in
+    # the background after a short delay lets everything settle first.
+    home.activation.waybarUpdate = lib.hm.dag.entryAfter [ "mutableGeneration" "setTheme" ] ''
       export PATH="${
         lib.makeBinPath (
           with pkgs;
@@ -269,8 +271,18 @@ in
         )
       }:$HOME/.local/bin:$PATH"
 
-      if [ -S "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket.sock" ] 2>/dev/null; then
-        $HOME/.local/bin/hyde-shell waybar.py --update 2>/dev/null || true
+      export XDG_SESSION_DESKTOP="''${XDG_SESSION_DESKTOP:-Hyprland}"
+      export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+      _hypr_sock=""
+      for _s in "$XDG_RUNTIME_DIR"/hypr/*/.socket.sock; do
+        [ -S "$_s" ] && _hypr_sock="$_s" && break
+      done
+      if [ -n "$_hypr_sock" ]; then
+        export HYPRLAND_INSTANCE_SIGNATURE="$(basename "$(dirname "$_hypr_sock")")"
+        # Run in background with delay so activation fully completes first
+        ( sleep 3 && $HOME/.local/bin/hyde-shell waybar.py --update ) &
+      else
+        echo "waybarUpdate: no Hyprland socket found, skipping"
       fi
     '';
   };
