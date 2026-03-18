@@ -248,5 +248,30 @@ in
         mutable = true;
       };
     };
+
+    # Regenerate waybar dynamic CSS after activation.
+    # home.file with force+mutable overwrites global.css and border-radius.css
+    # with Hyde's templates (border-radius: 0em) on every rebuild.
+    # waybar.py --update reads the live Hyprland rounding value and regenerates them.
+    home.activation.waybarUpdate = lib.hm.dag.entryAfter [ "mutableGeneration" ] ''
+      export PATH="${
+        lib.makeBinPath (
+          with pkgs;
+          [
+            waybar
+            hyprland
+            jq
+            coreutils
+            gawk
+            which
+            python3
+          ]
+        )
+      }:$HOME/.local/bin:$PATH"
+
+      if [ -S "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket.sock" ] 2>/dev/null; then
+        $HOME/.local/bin/hyde-shell waybar.py --update 2>/dev/null || true
+      fi
+    '';
   };
 }

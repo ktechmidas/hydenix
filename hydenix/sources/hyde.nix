@@ -41,6 +41,12 @@ pkgs.stdenv.mkDerivation {
     # remove pkill command from rofilaunch.sh (line 2: "pkill rofi && exit 0")
     sed -i '2d' Configs/.local/lib/hyde/rofilaunch.sh
 
+    # Fix lockscreen.sh: exec the lockscreen command directly instead of
+    # wrapping it in a transient systemd service via app2unit.sh.
+    # The original creates a oneshot service that exits immediately while
+    # hyprlock.sh spawns hyprlock in a separate scope — the lock never appears.
+    sed -i '/^unit_name=/,$ { s|app2unit.sh.*-- "\$lockscreen.sh" "\$@"|exec "\$lockscreen.sh" "\$@"| ; s|app2unit.sh.*-- "\$lockscreen" "\$@"|exec "\$lockscreen" "\$@"| }' Configs/.local/lib/hyde/lockscreen.sh
+
     # BUILD FONTS
     mkdir -p $out/share/fonts/truetype
     for fontarchive in ./Source/arcs/Font_*.tar.gz; do
