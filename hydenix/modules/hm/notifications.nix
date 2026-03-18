@@ -25,7 +25,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
+  config = lib.mkIf (cfg.enable && !config.hydenix.hm.hyprpanel.enable) (lib.mkMerge [
     # Dunst (default, when swaync is not enabled)
     (lib.mkIf (!cfg.swaync.enable) {
       home.packages = with pkgs; [
