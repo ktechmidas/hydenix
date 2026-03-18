@@ -71,6 +71,10 @@ in
         source = "${pkgs.hyde}/Configs/.local/share/hypr/hyprland.conf";
         force = true;
       };
+      ".local/share/hypr/migration.conf" = {
+        source = "${pkgs.hyde}/Configs/.local/share/hypr/migration.conf";
+        force = true;
+      };
       ".local/share/hypr/startup.conf" = {
         source = "${pkgs.hyde}/Configs/.local/share/hypr/startup.conf";
         force = true;
