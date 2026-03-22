@@ -323,5 +323,33 @@ in
         };
       })
     ];
+
+    # After the theme switch, kill any waybar that might have been started
+    # and ensure hyprpanel is running via HyDE's proper service management.
+    home.activation.ensureHyprPanel = lib.hm.dag.entryAfter [ "setTheme" "reloadSystemd" ] ''
+      # Detect Hyprland session
+      _hypr_running=false
+      if [ -n "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+        _hypr_running=true
+      else
+        export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+        for _s in "$XDG_RUNTIME_DIR"/hypr/*/.socket.sock; do
+          [ -S "$_s" ] && _hypr_running=true && break
+        done
+      fi
+
+      if [ "$_hypr_running" = true ]; then
+        # Kill any waybar that shouldn't be here
+        ${lib.getExe pkgs.killall} waybar 2>/dev/null || true
+        ${pkgs.systemd}/bin/systemctl --user stop "hyde-Hyprland-bar.service" 2>/dev/null || true
+
+        # Start hyprpanel via HyDE's service management if not already running
+        if ! ${pkgs.procps}/bin/pgrep -x .hyprpanel-wrap > /dev/null 2>&1; then
+          export XDG_SESSION_DESKTOP="''${XDG_SESSION_DESKTOP:-Hyprland}"
+          export PATH="${lib.makeBinPath [ pkgs.hyprpanel ]}:$HOME/.local/bin:$HOME/.local/lib/hyde:$PATH"
+          $HOME/.local/bin/hyde-shell app -u hyde-Hyprland-bar.service -t service -- hyprpanel > /dev/null 2>&1 || true
+        fi
+      fi
+    '';
   };
 }
