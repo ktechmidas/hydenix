@@ -7,6 +7,7 @@
 
 let
   cfg = config.hydenix.hm.theme;
+  hyprpanelEnabled = config.hydenix.hm.hyprpanel.enable;
 
   # Helper function to find a theme package by name, returns null if not found
   findThemeByName = themeName: pkgs.hydenix-themes.${themeName} or null;
@@ -81,8 +82,27 @@ in
       #TODO: this works but a more robust implementation is possible. just do what theme.set.sh/dconf.set.sh does and use home.file to set the correct gtk/qt/etc options
     */
 
+    # When hyprpanel is the bar, strip the wallbash exec command from waybar.theme files
+    # BEFORE the theme switch runs. This prevents wallbash from calling wbarconfgen.sh →
+    # waybar.py --update → starting waybar during the theme switch.
+    # Also patch hyde.conf since mutableFileGeneration resets $start.BAR to waybar.
+    home.activation.prepareBar = lib.mkIf hyprpanelEnabled (
+      lib.hm.dag.entryAfter [ "mutableFileGeneration" ] ''
+        _hyde_conf="$HOME/.local/share/hyde/hyde.conf"
+        if [ -f "$_hyde_conf" ]; then
+          ${pkgs.gnused}/bin/sed -i 's|\$start\.BAR=.*|\$start.BAR=hyprpanel|' "$_hyde_conf"
+        fi
+        for _wt in "$HOME"/.config/hyde/themes/*/waybar.theme; do
+          [ -f "$_wt" ] || continue
+          ${pkgs.gnused}/bin/sed -i '1s/|.*//' "$_wt"
+        done
+      ''
+    );
+
     # applies what it can before graphical.target, think of this like a "first content paint"
-    home.activation.setTheme = lib.hm.dag.entryAfter [ "mutableGeneration" ] ''
+    home.activation.setTheme = lib.hm.dag.entryAfter (
+      [ "mutableGeneration" ] ++ lib.optional hyprpanelEnabled "prepareBar"
+    ) ''
       # Define path with required tools
       export PATH="${
         lib.makeBinPath (
@@ -94,7 +114,6 @@ in
             dunst
             libnotify
             systemd
-            waybar
             kitty
             gawk
             coreutils
@@ -104,6 +123,7 @@ in
             util-linux
             dconf
           ]
+          ++ (if hyprpanelEnabled then [ hyprpanel ] else [ waybar ])
         )
       }:$HOME/.local/bin:$PATH"
 
@@ -170,12 +190,11 @@ in
           gawk
           parallel
           swww
-          waybar
           kitty
           dunst
           libnotify
           "${config.home.homeDirectory}/.local/bin"
-        ];
+        ] ++ (if hyprpanelEnabled then [ hyprpanel ] else [ waybar ]);
       };
       Install.WantedBy = [ "graphical-session.target" ];
     };
@@ -204,7 +223,6 @@ in
           dunst
           libnotify
           systemd
-          waybar
           kitty
           gawk
           coreutils
@@ -214,7 +232,7 @@ in
           util-linux
           dconf
           "${config.home.homeDirectory}/.local/bin"
-        ];
+        ] ++ (if hyprpanelEnabled then [ hyprpanel ] else [ waybar ]);
       };
       Install.WantedBy = [ "graphical-session.target" ];
     };
